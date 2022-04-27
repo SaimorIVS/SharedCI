@@ -22,6 +22,9 @@ jobs:
     timeout-minutes: 10
     env:
       GITHUB_PACKAGES_TOKEN: ${{ secrets.packages_token }}
+      NODE_ENV: production
+      SXCOM_API_URL: "https://api.stavox.com"
+      DISCORD_API_URL: "https://discordapi.stavox.dk"
     defaults:
       run:
         working-directory: ${{ inputs.folder }}
