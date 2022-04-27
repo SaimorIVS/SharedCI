@@ -20,6 +20,8 @@ jobs:
     name: Release Asset
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      GITHUB_PACKAGES_TOKEN: ${{ secrets.packages_token }}
     defaults:
       run:
         working-directory: ${{ inputs.folder }}
