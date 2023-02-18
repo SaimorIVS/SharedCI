@@ -1,0 +1,67 @@
+name: Release Asset
+on:
+  workflow_call:
+    inputs:
+      folder:
+        required: true
+        type: string
+      name:
+        required: true
+        type: string
+      outFolder:
+        required: true
+        type: string
+    secrets:
+      packages_token:
+        required: true
+
+jobs:
+  build:
+    name: Release Asset
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GITHUB_PACKAGES_TOKEN: ${{ secrets.packages_token }}
+      NODE_ENV: production
+      SXCOM_API_URL: "https://api.stavox.com"
+      DISCORD_API_URL: "https://discordapi.stavox.dk"
+    defaults:
+      run:
+        working-directory: ${{ inputs.folder }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get short SHA
+        id: slug
+        run: |
+          echo "::set-output name=sha8::$(echo ${GITHUB_SHA} | cut -c1-8)"
+          echo "::set-output name=sha::${GITHUB_SHA}"
+
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+
+      - name: Install packages
+        run: |
+            yarn install --immutable
+        env:
+          NODE_ENV: development
+
+      - name: Lint and build
+        run: |
+          yarn lint
+          yarn build
+
+      - name: Zip
+        working-directory: ${{ inputs.outFolder }}
+        run: zip -r Release.zip *
+
+      - name: Create release
+        if: ${{ github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "${{ inputs.outFolder }}/Release.zip"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit: ${{ steps.slug.outputs.sha }}
+          tag: ${{ github.run_id }}
