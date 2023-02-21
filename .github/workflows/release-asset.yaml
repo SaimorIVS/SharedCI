@@ -23,8 +23,7 @@ jobs:
     env:
       GITHUB_PACKAGES_TOKEN: ${{ secrets.packages_token }}
       NODE_ENV: production
-      SXCOM_API_URL: "https://api.stavox.com"
-      DISCORD_API_URL: "https://discordapi.stavox.dk"
+      SXCOM_GLOBAL_API_URL: "https://api.stavox.com"
     defaults:
       run:
         working-directory: ${{ inputs.folder }}
