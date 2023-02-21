@@ -45,5 +45,7 @@ jobs:
           build-args: |
             NODE_ENV=production
             GIT_COMMIT=${{ github.sha }}
+            UID=1001
+            GID=1001
           secrets: |
             github_packages_token=${{ secrets.packages_token }}
