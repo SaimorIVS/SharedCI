@@ -47,5 +47,7 @@ jobs:
             GIT_COMMIT=${{ github.sha }}
             UID=1001
             GID=1001
+            USER=superman
+            GROUP=superman
           secrets: |
             github_packages_token=${{ secrets.packages_token }}
